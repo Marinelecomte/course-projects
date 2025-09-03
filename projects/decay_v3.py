@@ -16,7 +16,6 @@ def solver(
         u[n + 1] = (1 - (1 - theta) * a * dt) / (1 + theta * dt * a) * u[n]
     return u, t
 
-
 def u_exact(t: float, I: float, a: float) -> float:
     return I * np.exp(-a * t)
 
