@@ -152,7 +152,25 @@ class VibFD2(VibSolver):
         assert T.is_integer() and T % 2 == 0
 
     def __call__(self) -> np.ndarray:
-        u = np.zeros(self.Nt + 1)
+        N = self.Nt
+        dt = self.dt
+        s2 = (self.w * dt) ** 2
+
+        A = np.zeros((N + 1, N + 1))
+        b = np.zeros(N + 1)
+
+        A[0, 0] = 1.0
+        b[0] = self.I
+
+        for n in range(1, N):
+            A[n, n - 1] = 1.0
+            A[n, n] = -2.0 + s2
+            A[n, n + 1] = 1.0
+
+        A[N, N] = 1.0
+        b[N] = self.I
+
+        u = np.linalg.solve(A, b)
         return u
 
 
@@ -174,7 +192,27 @@ class VibFD3(VibSolver):
         assert T.is_integer() and T % 2 == 0
 
     def __call__(self) -> np.ndarray:
-        u = np.zeros(self.Nt + 1)
+        N = self.Nt
+        dt = self.dt
+        s2 = (self.w * dt) ** 2
+
+        A = np.zeros((N + 1, N + 1))
+        b = np.zeros(N + 1)
+
+        A[0, 0] = 1.0
+        b[0] = self.I
+
+        for n in range(1, N):
+            A[n, n - 1] = 1.0
+            A[n, n] = -2.0 + s2
+            A[n, n + 1] = 1.0
+
+        A[N, N - 2] = 1.0
+        A[N, N - 1] = -4.0
+        A[N, N] = 3.0
+        b[N] = 0.0
+
+        u = np.linalg.solve(A, b)
         return u
 
 
@@ -190,7 +228,42 @@ class VibFD4(VibFD2):
     order: int = 4
 
     def __call__(self) -> np.ndarray:
-        u = np.zeros(self.Nt + 1)
+        N = self.Nt
+        dt = self.dt
+        s2 = (self.w * dt) ** 2
+
+        A = np.zeros((N + 1, N + 1))
+        b = np.zeros(N + 1)
+
+        A[0, 0] = 1.0
+        b[0] = self.I
+        A[N, N] = 1.0
+        b[N] = self.I
+
+        for n in range(2, N - 1):
+            A[n, n - 2] = -1.0
+            A[n, n - 1] = 16.0
+            A[n, n] = -30.0 + 12.0 * s2
+            A[n, n + 1] = 16.0
+            A[n, n + 2] = -1.0
+
+        n = 1
+        A[n, n - 1] = 10.0
+        A[n, n] = -15.0 + 12.0 * s2
+        A[n, n + 1] = -4.0
+        A[n, n + 2] = 14.0
+        A[n, n + 3] = -6.0
+        A[n, n + 4] = 1.0
+
+        n = N - 1
+        A[n, n + 1] = 10.0
+        A[n, n] = -15.0 + 12.0 * s2
+        A[n, n - 1] = -4.0
+        A[n, n - 2] = 14.0
+        A[n, n - 3] = -6.0
+        A[n, n - 4] = 1.0
+
+        u = np.linalg.solve(A, b)
         return u
 
 
