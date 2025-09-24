@@ -57,10 +57,18 @@ class Wave1D:
         """
         D = sparse.diags([1, -2, 1], [-1, 0, 1], (self.N + 1, self.N + 1), "lil")
         if bc == 1:  # Neumann condition is baked into stencil
-            raise NotImplementedError
+            D[0, 0] = -2
+            D[0, 1] = 2
+            D[-1, -1] = -2
+            D[-1, -2] = 2
 
         elif bc == 3:  # periodic (Note u[0] = u[-1])
-            raise NotImplementedError
+            D[0, -2] = 1
+            D[0, -1] = -2
+            D[0, 1] = 1
+            D[-1, 0] = 1
+            D[-1, -2] = 1
+            D[-1, -1] = -2
 
         return D
 
@@ -89,10 +97,11 @@ class Wave1D:
             pass
 
         elif bc == 2:  # Open boundary
-            raise NotImplementedError
+            C = self.cfl
+            u[0] = 2*(1-C)*self.unm1[0] - (1-C)/(1+C)*self.unm1[0] + (2*C**2)/(1+C)*self.unm1[1]
 
         elif bc == 3:
-            raise NotImplementedError
+            u[-1] = u[0]
 
         else:
             raise RuntimeError(f"Wrong bc = {bc}")
