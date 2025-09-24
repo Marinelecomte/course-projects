@@ -64,8 +64,7 @@ class Wave1D:
 
         elif bc == 3:  # periodic (Note u[0] = u[-1])
             D[0, -2] = 1
-            D[0, 1] = 1
-            D[-1, 0] = 1
+            D[-1, 1] = 1
             D[-1, -2] = 1
 
         return D
@@ -96,8 +95,8 @@ class Wave1D:
 
         elif bc == 2:  # Open boundary
             C = self.cfl
-            u[0] = 2*(1-C)*self.unm1[0] - (1-C)/(1+C)*self.unm1[0] + (2*C**2)/(1+C)*self.unm1[1]
-            u[-1] = 2*(1-C)*self.unm1[-1] - (1-C)/(1+C)*self.unm1[-1] + (2*C**2)/(1+C)*self.unm1[-2]
+            u[0]  = 2*(1 - C)*self.un[0] - (1 - C)/(1 + C)*self.unm1[0] + (2*C**2)/(1 + C)*self.unm1[1]
+            u[-1] = 2*(1 - C)*self.un[-1] - (1 - C)/(1 + C)*self.unm1[-1] + (2*C**2)/(1 + C)*self.unm1[-2]
             
         elif bc == 3:
             u[-1] = u[0]
