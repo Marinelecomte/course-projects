@@ -95,9 +95,9 @@ class Wave1D:
 
         elif bc == 2:  # Open boundary
             C = self.cfl
-            u[0]  = 2*(1 - C)*self.un[0] - (1 - C)/(1 + C)*self.unm1[0] + (2*C**2)/(1 + C)*self.unm1[1]
-            u[-1] = 2*(1 - C)*self.un[-1] - (1 - C)/(1 + C)*self.unm1[-1] + (2*C**2)/(1 + C)*self.unm1[-2]
-            
+            u[0]  = self.un[0]  + C * (self.un[1]  - self.un[0])
+            u[-1] = self.un[-1] - C * (self.un[-1] - self.un[-2])
+    
         elif bc == 3:
             u[-1] = u[0]
 
